@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Analysis | Traffic Violation System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background: url("{% static 'images/road.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            height: 100vh;
+        }
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.6);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container-box {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            gap: 30px;
+        }
+        .image-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+        .image-box img {
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            max-width: 300px;
+            height: auto;
+        }
+        .info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+        .info label {
+            font-weight: bold;
+            color: #fff;
+        }
+        .info input {
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        .buttons button {
+            padding: 12px 25px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            transition: 0.3s ease-in-out;
+        }
+        .next-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        .next-btn:hover {
+            background-color: #0056b3;
+        }
+        .upload-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .upload-btn:hover {
+            background-color: #218838;
+        }
+        .exit-btn {
+            background-color: crimson;
+            color: white;
+        }
+        .exit-btn:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div class="container-box">
+            <div class="image-box">
+                {% if image_url|slice:":7" == "uploads" %}
+                    <img src="/media/{{ image_url }}" alt="Uploaded Traffic Image">
+                {% else %}
+                    <img src="{% static image_url %}" alt="Dataset Traffic Image">
+                {% endif %}
+            </div>
+            <div class="info">
+                <label>Helmet Status:</label>
+                <input type="text" value="{{ helmet_status }}" readonly>
+
+                <label>Number Plate Present:</label>
+                <input type="text" value="{{ number_plate_present }}" readonly>
+
+                <label>Plate Number:</label>
+                <input type="text" value="{{ plate_number }}" readonly>
+
+                <label>Number of Passengers:</label>
+                <input type="text" value="{{ passenger_count }}" readonly>
+
+                <div class="buttons">
+                    <form method="get" action="{% url 'image_analysis' %}">
+                        <button type="submit" name="next" value="1" class="next-btn">Next Image</button>
+                    </form>
+
+                    <form method="post" action="{% url 'image_upload' %}" enctype="multipart/form-data" id="uploadForm">
+                        {% csrf_token %}
+                        <input type="file" name="upload_image" id="uploadImage" accept="image/*" style="display: none;" required>
+                        <button type="button" class="upload-btn" onclick="triggerFileInput()">Upload Image</button>
+                    </form>
+
+                    <form method="get" action="{% url 'dashboard' %}">
+                        <button type="submit" class="exit-btn">Exit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function triggerFileInput() {
+            document.getElementById('uploadImage').click();
+        }
+        document.getElementById('uploadImage').addEventListener('change', function () {
+            document.getElementById('uploadForm').submit();
+        });
+    </script>
+</body>
+</html>
