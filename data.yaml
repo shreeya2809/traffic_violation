@@ -1,0 +1,14 @@
+train: /content/yolov5/Traffic violation.v5i.yolov5pytorch/train/images
+val: /content/yolov5/Traffic violation.v5i.yolov5pytorch/valid/images
+test: /content/yolov5/Traffic violation.v5i.yolov5pytorch/test/images
+
+nc: 12
+names: ['Auto rickshaw', 'Bus', 'Car', 'Motorcycle', 'Person', 'Triple Riding', 'Truck', 'helmet', 'mobile', 'no-helmet', 'stunt', 'using mobile']
+
+
+roboflow:
+  workspace: major-project-nlqt0
+  project: traffic-violation-8voto
+  version: 5
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/major-project-nlqt0/traffic-violation-8voto/dataset/5
