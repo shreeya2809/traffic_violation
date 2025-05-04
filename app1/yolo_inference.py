@@ -1,10 +1,20 @@
-# Dummy logic(replace with YOLO later)
+import torch
+import os
+import sys
 
-def detect_from_image(path):
-    result = {
-        'helmet_present': True,
-        'plate_detected': True,
-        'plate_number': 'MH12AB1234',
-        'passenger_count': 3,
-    }
-    return path, result
+# Add YOLOv5 path to system
+YOLOV5_PATH = os.path.join(os.path.dirname(__file__), 'yolov5')
+sys.path.append(YOLOV5_PATH)
+
+from models.experimental import attempt_load
+from utils.torch_utils import select_device
+
+# Load model
+MODEL_PATH = os.path.join(os.path.dirname(__file__), 'best.pt')
+device = select_device('')
+model = attempt_load(MODEL_PATH, map_location=device)
+model.eval()
+
+# Example dummy function
+def detect_objects(image_path):
+    return [{"name": "helmet", "confidence": 0.92}]
