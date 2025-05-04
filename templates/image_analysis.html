@@ -100,13 +100,34 @@
 <body>
     <div class="overlay">
         <div class="container-box">
+            <!-- Image Upload Form -->
+            <div class="info">
+                <h2>Upload an Image</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="image" required>
+                    <button type="submit">Analyze</button>
+                </form>
+            </div>
+
+            <!-- Image Display and Detections -->
             <div class="image-box">
-                {% if image_url|slice:":7" == "uploads" %}
-                    <img src="/media/{{ image_url }}" alt="Uploaded Traffic Image">
-                {% else %}
-                    <img src="{% static image_url %}" alt="Dataset Traffic Image">
+                {% if image_url %}
+                    <h3>Uploaded Image:</h3>
+                    <img src="/media/{{ image_url }}" width="400">
+                    
+                    <h3>Detections:</h3>
+                    <ul>
+                        {% for obj in detections %}
+                            <li>{{ obj['name'] }} (Confidence: {{ obj['confidence']|floatformat:2 }})</li>
+                        {% empty %}
+                            <li>No objects detected</li>
+                        {% endfor %}
+                    </ul>
                 {% endif %}
             </div>
+
+            <!-- Other Info Section -->
             <div class="info">
                 <label>Helmet Status:</label>
                 <input type="text" value="{{ helmet_status }}" readonly>
@@ -138,6 +159,7 @@
             </div>
         </div>
     </div>
+
     <script>
         function triggerFileInput() {
             document.getElementById('uploadImage').click();
